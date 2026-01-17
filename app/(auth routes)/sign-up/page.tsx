@@ -40,12 +40,11 @@ export default function SignUpPage() {
         <div className={css.formGroup}>
           <label htmlFor="email">Email</label>
           <input
-            id="password"
-            type="password"
-            name="password"
+            id="email"
+            type="email"
+            name="email"
             className={css.input}
             required
-            minLength={6}
           />
         </div>
 
@@ -57,6 +56,7 @@ export default function SignUpPage() {
             name="password"
             className={css.input}
             required
+            minLength={6}
           />
         </div>
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
@@ -32,21 +32,18 @@ export default function ProfilePage() {
 
         <div className={css.avatarWrapper}>
           <Image
-            src="https://ac.goit.global/fullstack/react/avatar-placeholder.jpg"
-            alt="User Avatar"
+            src={"https://ac.goit.global/fullstack/react/default-avatar.jpg"}
+            alt={` avatar`}
             width={120}
             height={120}
             className={css.avatar}
+            priority
           />
         </div>
 
         <div className={css.profileInfo}>
-          <p>
-            <strong>Username:</strong> your_username
-          </p>
-          <p>
-            <strong>Email:</strong> your_email@example.com
-          </p>
+          <p>Username: </p>
+          <p>Email: </p>
         </div>
       </div>
     </main>

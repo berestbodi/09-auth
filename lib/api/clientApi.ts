@@ -15,6 +15,7 @@ export const fetchNotes = async (
   const res = await api.get<NoteRes>("/notes", {
     params: { page, perPage: 12, search, tag },
   });
+  console.log(res);
   return res.data;
 };
 

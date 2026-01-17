@@ -39,6 +39,6 @@ export const getMe = async () => {
 
 export const checkSession = async () => {
   const authHeaders = await getAuthHeaders();
-  const res = await api.get<User | null>("/auth/session", authHeaders);
+  const res = await api.get<string>("/auth/session", authHeaders);
   return res.data;
 };

@@ -12,6 +12,7 @@ export async function proxy(request: NextRequest) {
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
   let isAuthenticated = !!accessToken;
+  let responseWithCookies: NextResponse | null = null;
 
   if (!isAuthenticated && refreshToken) {
     try {
@@ -27,17 +28,11 @@ export async function proxy(request: NextRequest) {
 
       if (response.ok) {
         isAuthenticated = true;
-        const responseNext = NextResponse.next();
-
+        responseWithCookies = NextResponse.next();
         const setCookie = response.headers.get("set-cookie");
         if (setCookie) {
-          responseNext.headers.set("set-cookie", setCookie);
+          responseWithCookies.headers.set("set-cookie", setCookie);
         }
-
-        const isPrivateRoute = privateRoutes.some((route) =>
-          nextUrl.pathname.startsWith(route),
-        );
-        if (isPrivateRoute) return responseNext;
       }
     } catch (error) {
       console.error("Session refresh failed in proxy:", error);
@@ -56,10 +51,15 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL("/", request.url));
+    const redirectResponse = NextResponse.redirect(new URL("/", request.url));
+    if (responseWithCookies) {
+      const setCookie = responseWithCookies.headers.get("set-cookie");
+      if (setCookie) redirectResponse.headers.set("set-cookie", setCookie);
+    }
+    return redirectResponse;
   }
 
-  return NextResponse.next();
+  return responseWithCookies || NextResponse.next();
 }
 
 export const config = {

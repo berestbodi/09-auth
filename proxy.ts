@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 const privateRoutes = ["/profile", "/notes"];
 const authRoutes = ["/sign-in", "/sign-up"];
 
 export async function proxy(request: NextRequest) {
-  const { nextUrl, cookies } = request;
+  const { nextUrl } = request;
 
-  const accessToken = cookies.get("accessToken")?.value;
-  const refreshToken = cookies.get("refreshToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
 
   let isAuthenticated = !!accessToken;
 
@@ -25,7 +27,6 @@ export async function proxy(request: NextRequest) {
 
       if (response.ok) {
         isAuthenticated = true;
-
         const responseNext = NextResponse.next();
 
         const setCookie = response.headers.get("set-cookie");
@@ -62,5 +63,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/profile/:path*", "/notes/:path*", "/sign-in", "/sign-up"],
 };

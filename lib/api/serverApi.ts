@@ -1,13 +1,15 @@
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import { api } from "./api";
 import { Note, NoteRes } from "@/types/note";
 import { User } from "@/types/user";
 
 const getAuthHeaders = async () => {
-  const headersList = await headers();
+  const cookieStore = await cookies();
+  const cookieString = cookieStore.toString();
+
   return {
     headers: {
-      cookie: headersList.get("cookie") || "",
+      Cookie: cookieString,
     },
   };
 };
@@ -38,10 +40,10 @@ export const getMe = async () => {
 };
 
 export const checkSession = async (externalCookie?: string) => {
-  const cookieString = externalCookie || (await headers()).get("cookie") || "";
+  const cookieString = externalCookie || (await cookies()).toString();
 
   const res = await api.get<string>("/auth/session", {
-    headers: { cookie: cookieString },
+    headers: { Cookie: cookieString },
   });
   return res;
 };

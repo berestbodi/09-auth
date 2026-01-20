@@ -1,7 +1,3 @@
-Here is a matching, stylized **README.md** for your **NoteHub** project. Since this project is more advanced (featuring Next.js 16 and Authentication), I've highlighted the security and server-side features.
-
----
-
 # 📝 NoteHub
 
 ### *Secure, smart, and seamless note management*
